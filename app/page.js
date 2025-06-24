@@ -1,15 +1,19 @@
 "use client";
 import React from "react";
-import NavBar from "@/components/NavBar";
-import Dashboard from "@/components/Dashboard";
+import Link from "next/link";
+
+
 
 
 export default function Home() {
   return (
     <div>
-
-      <NavBar />
-      <Dashboard/>
+      <p>
+        <Link href="/dashboard" className="text-blue-500 hover:underline">
+          Go to Dashboard
+        </Link>
+      </p>
+     
     
     </div>
   );
