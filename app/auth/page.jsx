@@ -56,10 +56,10 @@ export default function Page() {
           password,
           options: {
             data: { full_name: username },
-          },
+          }, 
         });
 
-        router.push("/verify-email");
+        router.push("/dashboard");
 
         if (error) throw error;
         console.log("User registered:", data);

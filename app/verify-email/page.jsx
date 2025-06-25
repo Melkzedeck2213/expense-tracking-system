@@ -17,7 +17,7 @@ export default function VerifyEmailPage() {
       const session = sessionData?.session;
 
       if (!session) {
-        router.push("/register"); // or /login
+        router.push("/auth"); // or /login
         return;
       }
 
