@@ -5,6 +5,7 @@ import { supabase } from "@/utils/supabaseClient";
 import SubmitButton from "./SubmitButton";
 import ClearButton from "./ClearButton";
 
+
 const defaultCategories = [
   "Food",
   "Electricity",
