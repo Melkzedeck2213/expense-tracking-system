@@ -26,7 +26,7 @@ useEffect(() => {
       router.push('/auth');
     } else {
       setUserEmail(data.user.email);
-      setUsername(data.user.user_metadata?.full_name)
+      setUserName(data.user.user_metadata?.full_name)
     }
   };
 
@@ -55,8 +55,10 @@ useEffect(() => {
       {/*Greeting*/}
 
       <div className="flex flex-col items-center justify-center h-screen">
-        <p>{greetings()} {userName},you are logged in with the email {userEmail}</p>
-        <p className="text-lg text-gray-700">Welcome to your dashboard!</p>
+        <p>{greetings()} {userName}</p>
+        
+        <p>you are logged in with the email {userEmail}</p>
+        
         <div className="mt-8">
           <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
             Action Button

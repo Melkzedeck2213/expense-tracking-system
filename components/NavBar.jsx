@@ -1,46 +1,45 @@
-import React from 'react'
-import Link from 'next/link'
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
 
 const NavBar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleIsOpen = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const navLinks = (
     <>
-    
-      
-       <li>
-        <Link href="/dashboard" className="hover:underline">
-          Dashboard
-        </Link>
+      <li key="dashboard">
+        <Link href="/dashboard" className="hover:underline transition duration-500 ease-in-out">Dashboard</Link>
       </li>
-      <li>
-        <Link href="/expenses" className="hover:underline">
-          Expenses
-        </Link>
+      <li key="expenses">
+        <Link href="/expenses" className="hover:underline">Expenses</Link>
       </li>
-      <li>
-        <Link href="/expenses/new" className="hover:underline">
-          Add Expenses
-        </Link>
+      <li key="add-expenses">
+        <Link href="/expenses/new" className="hover:underline">Add Expenses</Link>
       </li>
-      <li>
-        <Link href="/profile" className="hover:underline">
-          Profile
-        </Link>
+      <li key="profile">
+        <Link href="/profile" className="hover:underline">Profile</Link>
       </li>
-      
-    
     </>
-  )
-  return (
-    <nav className='fixed top-0 left-0 w-full z-50 px-8 py-10'>
-      <div className="flex justify-between items-center max-w-6xl mx-auto py-4  ">
+  );
 
-        <h3 className="text-xl font-bold cursor-pointer"> Expenses Tracking System</h3>
-        <ul className="flex flex-row gap-6"> 
+  return (
+    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-10  ">
+      <div className="flex justify-between items-center max-w-6xl mx-auto py-4">
+        <h3 className="text-xl font-bold cursor-pointer">Expenses Tracking System</h3>
+
+        {/* Desktop nav */}
+        <ul className="flex flex-row gap-6 hidden md:flex">
           {navLinks}
         </ul>
 
-        {/*theme controller*/}
-        <label className="swap swap-rotate">
+        {/* Right-side icons (theme toggle + menu) */}
+        <div className={`flex flex-row gap-4 transition-all duration-300 ${isMenuOpen ? 'translate-x-[-240px]' : ''}`}>
+          {/* Theme toggle */}
+         <label className="swap swap-rotate">
   {/* this hidden checkbox controls the state */}
   <input type="checkbox" className="theme-controller" value="cupcake" />
 
@@ -63,9 +62,23 @@ const NavBar = () => {
   </svg>
 </label>
 
+          {/* Menu toggle */}
+          <button className="cursor-pointer md:hidden" onClick={toggleIsOpen}>
+            {isMenuOpen ? <XMarkIcon className="h-8 w-8" /> : <Bars3Icon className="h-8 w-8" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile side menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64  shadow-lg p-8 transform transition-transform duration-300 ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        } md:hidden`}
+      >
+        <ul className="flex flex-col gap-6 mt-12 backdrop-blur" onClick={toggleIsOpen}>{navLinks}</ul>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;
