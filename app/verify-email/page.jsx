@@ -1,92 +1,52 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
+import { useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 
-export default function VerifyEmailPage() {
-  const router = useRouter();
-  const [checking, setChecking] = useState(false);
-  const [resending, setResending] = useState(false);
+export default function VerifyEmail() {
   const [message, setMessage] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // 🛡️ Protect the route: redirect if no session
-  useEffect(() => {
-    const protectPage = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const session = sessionData?.session;
+  const resendVerification = async () => {
+    setLoading(true);
+    setMessage("");
 
-      if (!session) {
-        router.push("/auth"); // or /login
-        return;
-      }
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
-      const email = session.user?.email;
-      if (email) setUserEmail(email);
-    };
-
-    protectPage();
-  }, [router]);
-
-  // 🔁 Poll email verification status
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const { data: userData, error } = await supabase.auth.getUser();
-      if (userData?.user?.email_confirmed_at) {
-        router.push("/dashboard");
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [router]);
-
-  // 🔄 Resend logic
-  const handleResend = async () => {
-    if (!userEmail) {
-      setMessage("No email found. Please sign up again.");
+    if (error || !user) {
+      setMessage("Couldn't get user. Please try again.");
+      setLoading(false);
       return;
     }
 
-    setResending(true);
-    setMessage("");
-
-    const { error } = await supabase.auth.resend({
+    const { error: resendError } = await supabase.auth.resend({
       type: "signup",
-      email: userEmail,
+      email: user.email,
     });
 
-    if (error) {
-      setMessage("Failed to resend email. Try again later.");
-      console.error(error.message);
+    if (resendError) {
+      setMessage("Error sending verification email. Try again later.");
     } else {
-      setMessage("Verification email resent. Please check your inbox.");
+      setMessage("Verification email resent! Check your inbox.");
     }
 
-    setResending(false);
+    setLoading(false);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4">
-      <h1 className="text-2xl font-bold mb-4">Check your email 📧</h1>
-      <p className="text-gray-600 text-center mb-6 max-w-sm">
-        A confirmation link was sent to <strong>{userEmail}</strong>. Click it to activate your account.
-      </p>
-
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h2 className="text-xl mb-4">Please verify your email to continue</h2>
       <button
-        onClick={handleResend}
-        disabled={resending}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+        onClick={resendVerification}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        disabled={loading}
       >
-        {resending ? "Resending..." : "Resend Verification Email"}
+        {loading ? "Resending..." : "Resend Verification Email"}
       </button>
-
-      {message && (
-        <p className="mt-4 text-sm text-green-600 text-center max-w-sm">
-          {message}
-        </p>
-      )}
-
-      <p className="mt-8 text-sm text-gray-500">Still waiting? Check your spam folder.</p>
+      {message && <p className="mt-4 text-sm text-gray-700">{message}</p>}
     </div>
   );
 }

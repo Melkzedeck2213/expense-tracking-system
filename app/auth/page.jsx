@@ -59,7 +59,7 @@ export default function Page() {
           }, 
         });
 
-        router.push("/dashboard");
+        router.push("/verfiy-email");
 
         if (error) throw error;
         console.log("User registered:", data);

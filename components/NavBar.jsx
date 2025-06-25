@@ -34,7 +34,7 @@ const NavBar = () => {
     <nav className='fixed top-0 left-0 w-full z-50 px-8 py-10'>
       <div className="flex justify-between items-center max-w-6xl mx-auto py-4  ">
 
-        <h3 className="text-xl font-bold cursor-pointer"> Three.js</h3>
+        <h3 className="text-xl font-bold cursor-pointer"> Expenses Tracking System</h3>
         <ul className="flex flex-row gap-6"> 
           {navLinks}
         </ul>

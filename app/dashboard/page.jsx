@@ -26,7 +26,7 @@ useEffect(() => {
       router.push('/auth');
     } else {
       setUserEmail(data.user.email);
-      setUsername(data.user.user_metadata?.username)
+      setUsername(data.user.user_metadata?.full_name)
     }
   };
 
