@@ -71,6 +71,7 @@ export default function Page() {
 
         if (error) throw error;
         setUserId(data.user.id);
+        router.push('/dashboard')
         console.log("Logged in as:", data.user.email);
       }
 
