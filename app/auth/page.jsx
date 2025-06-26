@@ -14,8 +14,7 @@ import SubmitButton from "@/components/SubmitButton";
 import ClearButton from "@/components/ClearButton";
 
 export default function Page() {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const [registering, setRegistering] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,7 +55,7 @@ export default function Page() {
           password,
           options: {
             data: { full_name: username },
-          }, 
+          },
         });
 
         router.push("/verfiy-email");
@@ -71,7 +70,7 @@ export default function Page() {
 
         if (error) throw error;
         setUserId(data.user.id);
-        router.push('/dashboard')
+        router.push("/dashboard");
         console.log("Logged in as:", data.user.email);
       }
 
@@ -91,17 +90,57 @@ export default function Page() {
           {registering ? "Join the System" : "Welcome back!"}
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <EmailInput value={email} onChange={(e) => setEmail(e.target.value)} />
+          <EmailInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           {registering && (
-            <Username value={username} onChange={(e) => setUsername(e.target.value)} />
+            <Username
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           )}
-          <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {!registering && (
+            <p
+              onClick={async () => {
+                if (!email) {
+                  alert("Please enter your email first.");
+                  return;
+                }
+                const { error } = await supabase.auth.resetPasswordForEmail(
+                  email,
+                  {
+                    redirectTo: `${window.location.origin}/update-password`,
+                  }
+                );
+                if (error) {
+                  alert("Error sending reset link: " + error.message);
+                } else {
+                  alert("Password reset email sent!");
+                }
+              }}
+              className="text-sm text-blue-500 cursor-pointer hover:underline text-right"
+            >
+              Forgot password?
+            </p>
+          )}
+
           {registering && (
-            <ConfirmPassword value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <ConfirmPassword
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           )}
 
           <div className="flex flex-row justify-between">
-            <SubmitButton isSubmitting={isSubmitting} text={registering ? "Join" : "Login"} />
+            <SubmitButton
+              isSubmitting={isSubmitting}
+              text={registering ? "Join" : "Login"}
+            />
             <ClearButton onClick={resetForm} />
           </div>
 
