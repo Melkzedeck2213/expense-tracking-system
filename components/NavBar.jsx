@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Link from 'next/link';
 import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+   const [isScrolled, setIsScrolled] = useState(false);
+
+     // ─── Blur-on-scroll logic ──────────────────────────────────────────────
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 0);
+    onScroll();                           // run once on mount
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // ───────────────────────────────────────────────────────────────────────
+
 
   const toggleIsOpen = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,14 +31,14 @@ const NavBar = () => {
       <li key="add-expenses">
         <Link href="/expenses/new" className="hover:underline">Add Expenses</Link>
       </li>
-      <li key="profile">
-        <Link href="/profile" className="hover:underline">Profile</Link>
-      </li>
+     
     </>
   );
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-10  ">
+    <nav className={`fixed top-0 left-0 w-full z-50 px-8 py-10 ${isScrolled
+          ? "backdrop-blur-lg bg-base-100/70 dark:bg-base-200/60 shadow-md"
+          : "bg-transparent"}`  }>
       <div className="flex justify-between items-center max-w-6xl mx-auto py-4">
         <h3 className="text-xl font-bold cursor-pointer">Expenses Tracking System</h3>
 

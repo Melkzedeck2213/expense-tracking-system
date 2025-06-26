@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabaseClient';
+import NavBar from '@/components/NavBar';
 
 export default function ExpensesPage() {
   const [groupedExpenses, setGroupedExpenses] = useState({});
@@ -51,14 +52,16 @@ export default function ExpensesPage() {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto space-y-4">
+<>
+<NavBar/>
+    <div className="p-4 max-w-3xl mx-auto space-y-4 my-50">
       <h2 className="text-xl font-bold">Your Expenses by Date</h2>
       {Object.entries(groupedExpenses).map(([date, expenses]) => {
         const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
         return (
           <Link href={`/expenses/${date}`} key={date}>
-            <div className="border p-4 rounded hover:bg-gray-100 cursor-pointer">
+            <div className="border p-4 rounded hover:bg-base-100 cursor-pointer">
               <h3 className="font-medium">{formatDateLabel(date)}</h3>
               <p>Total: {total.toLocaleString()} TZS</p>
             </div>
@@ -66,5 +69,6 @@ export default function ExpensesPage() {
         );
       })}
     </div>
+</>
   );
 }
